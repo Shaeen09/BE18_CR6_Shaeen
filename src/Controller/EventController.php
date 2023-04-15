@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Form\EventType;
-use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,53 +44,45 @@ class EventController extends AbstractController
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $event = $form->getData();
-            $now = new DateTime("now");
-            $event->setCreateDate($now);
 
             $em = $doctrine->getManager();
 
             $em->persist($event);
             $em->flush();
 
-          
-
             return $this->redirectToRoute('app_event');
         }
 
-
         return $this->render('event/new.html.twig', [
-            'form' => $form,
+        
+            'form' => $form->createView()
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'app_event_edit')]
+    #[Route('/edit/{id}', name: 'app_event_edit', methods:['Get', 'POST'])]
     public function editEvent(ManagerRegistry $doctrine, Request $request, $id): Response
     {   
         $event = $doctrine->getRepository(EventType::class)->find($id);
 
         $form = $this->createForm(EventType::class, $event);
+         $form->handleRequest($request);
 
-        $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
+           
+            $event->save($event, true);
             $event = $form->getData();
-            $now = new DateTime("now");
-            $event->setCreateDate($now);
 
             $em = $doctrine->getManager();
 
             $em->persist($event);
             $em->flush();
 
-          
-
             return $this->redirectToRoute('app_event');
         }
 
-
         return $this->render('event/edit.html.twig', [
-            'form' => $form,
+            'form' => $form->createView()
         ]);
     }
 
