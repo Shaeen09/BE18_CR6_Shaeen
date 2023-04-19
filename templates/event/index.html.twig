@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %} {% block title %}Welcome to Vienna Events{% endblock %} {% block body %}
 
 <div class="container">
-    <h1 class="text text-center text-danger">Vienna Events</h1>
+    <h1>Vienna Events</h1>
 
-    <div class="row row-cols-3">
+    <div class="row row-cols-1 row-cols-xs-1 row-cols-sm-1 row-cols-md-2  row-cols-lg-3">
         {% for event in events %}
         <div>
-            <div class="card" style="width: 18rem;">
+            <div class="card" style="width: 22rem;">
                 <img src="{{event.image}}" class="card-img-top" style="height: 11rem" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{event.name}}</h5>
